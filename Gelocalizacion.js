@@ -18,8 +18,8 @@ function showPosition(position) {
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
     center: latlon.split(','), // starting position [lng, lat]
-    zoom: 15 // starting zoom
-    });
+    zoom: 12.5 // starting zoom
+    })
     // Add geolocate control to the map.
     const geolocateControl = new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -31,6 +31,18 @@ function showPosition(position) {
       showUserHeading: true
       });
 
+    map.addControl(
+      new MapboxDirections({
+      accessToken: mapboxgl.accessToken,
+      language: "es",
+      placeholderOrigin: 'Elija lugar de inicio',
+      placeholderDestination: 'Elija lugar de destino',
+      unit: 'metric'
+      }),
+      'top-left'
+      );
+      //seteo labels en español
+    setLabelsGPS();
     map.addControl(geolocateControl);
 
     const greenMarker = new mapboxgl.Marker({
@@ -48,6 +60,7 @@ function showPosition(position) {
     const units = {
       units: 'kilometers'
     }; // units can be degrees, radians, miles, or kilometers, just be sure to change the units in the text box to match. 
+
     const distance = turf.distance(latlon.split(','), [-58.52011629999999, -34.5], units);
     let value = document.getElementById('map-overlay')
     value.innerHTML = "Distancia: " + distance.toFixed([2]) + " kilometros."
@@ -104,4 +117,11 @@ function showPosition(position) {
       //geolocateControl.trigger('geolocate');
       });
       
+}
+
+function setLabelsGPS(){
+  document.getElementById('mapbox-directions-profile-driving-traffic').nextElementSibling.textContent = 'Trafico';
+  document.getElementById('mapbox-directions-profile-driving').nextElementSibling.textContent = 'Conducir';
+  document.getElementById('mapbox-directions-profile-walking').nextElementSibling.textContent = 'Caminar';
+  document.getElementById('mapbox-directions-profile-cycling').nextElementSibling.textContent = 'Bicicleta';
 }
